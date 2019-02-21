@@ -6,27 +6,32 @@ use Hyperlink;
 use ffi;
 use glib::object::IsA;
 use glib::translate::*;
-use glib_ffi;
-use gobject_ffi;
-use std::mem;
-use std::ptr;
+use std::fmt;
 
 glib_wrapper! {
-    pub struct HyperlinkImpl(Object<ffi::AtkHyperlinkImpl, ffi::AtkHyperlinkImplIface>);
+    pub struct HyperlinkImpl(Interface<ffi::AtkHyperlinkImpl>);
 
     match fn {
         get_type => || ffi::atk_hyperlink_impl_get_type(),
     }
 }
 
-pub trait HyperlinkImplExt {
+pub const NONE_HYPERLINK_IMPL: Option<&HyperlinkImpl> = None;
+
+pub trait HyperlinkImplExt: 'static {
     fn get_hyperlink(&self) -> Option<Hyperlink>;
 }
 
 impl<O: IsA<HyperlinkImpl>> HyperlinkImplExt for O {
     fn get_hyperlink(&self) -> Option<Hyperlink> {
         unsafe {
-            from_glib_full(ffi::atk_hyperlink_impl_get_hyperlink(self.to_glib_none().0))
+            from_glib_full(ffi::atk_hyperlink_impl_get_hyperlink(self.as_ref().to_glib_none().0))
         }
+    }
+}
+
+impl fmt::Display for HyperlinkImpl {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "HyperlinkImpl")
     }
 }

@@ -4,15 +4,12 @@
 
 use ObjectFactory;
 use ffi;
-use glib::object::Downcast;
+use glib::object::Cast;
 use glib::translate::*;
-use glib_ffi;
-use gobject_ffi;
-use std::mem;
-use std::ptr;
+use std::fmt;
 
 glib_wrapper! {
-    pub struct NoOpObjectFactory(Object<ffi::AtkNoOpObjectFactory, ffi::AtkNoOpObjectFactoryClass>): ObjectFactory;
+    pub struct NoOpObjectFactory(Object<ffi::AtkNoOpObjectFactory, ffi::AtkNoOpObjectFactoryClass, NoOpObjectFactoryClass>) @extends ObjectFactory;
 
     match fn {
         get_type => || ffi::atk_no_op_object_factory_get_type(),
@@ -23,7 +20,7 @@ impl NoOpObjectFactory {
     pub fn new() -> NoOpObjectFactory {
         assert_initialized_main_thread!();
         unsafe {
-            ObjectFactory::from_glib_full(ffi::atk_no_op_object_factory_new()).downcast_unchecked()
+            ObjectFactory::from_glib_full(ffi::atk_no_op_object_factory_new()).unsafe_cast()
         }
     }
 }
@@ -31,5 +28,13 @@ impl NoOpObjectFactory {
 impl Default for NoOpObjectFactory {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+pub const NONE_NO_OP_OBJECT_FACTORY: Option<&NoOpObjectFactory> = None;
+
+impl fmt::Display for NoOpObjectFactory {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "NoOpObjectFactory")
     }
 }
