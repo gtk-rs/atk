@@ -11,14 +11,27 @@ use glib::value::FromValueOptional;
 use glib::value::SetValue;
 use glib::value::Value;
 use gobject_ffi;
+use std::fmt;
 
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
 #[derive(Clone, Copy)]
 pub enum CoordType {
     Screen,
     Window,
+    Parent,
     #[doc(hidden)]
     __Unknown(i32),
+}
+
+impl fmt::Display for CoordType {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "CoordType::{}", match *self {
+            CoordType::Screen => "Screen",
+            CoordType::Window => "Window",
+            CoordType::Parent => "Parent",
+            _ => "Unknown",
+        })
+    }
 }
 
 #[doc(hidden)]
@@ -29,6 +42,7 @@ impl ToGlib for CoordType {
         match *self {
             CoordType::Screen => ffi::ATK_XY_SCREEN,
             CoordType::Window => ffi::ATK_XY_WINDOW,
+            CoordType::Parent => ffi::ATK_XY_PARENT,
             CoordType::__Unknown(value) => value
         }
     }
@@ -41,6 +55,7 @@ impl FromGlib<ffi::AtkCoordType> for CoordType {
         match value {
             0 => CoordType::Screen,
             1 => CoordType::Window,
+            2 => CoordType::Parent,
             value => CoordType::__Unknown(value),
         }
     }
@@ -83,6 +98,22 @@ pub enum Layer {
     Window,
     #[doc(hidden)]
     __Unknown(i32),
+}
+
+impl fmt::Display for Layer {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Layer::{}", match *self {
+            Layer::Invalid => "Invalid",
+            Layer::Background => "Background",
+            Layer::Canvas => "Canvas",
+            Layer::Widget => "Widget",
+            Layer::Mdi => "Mdi",
+            Layer::Popup => "Popup",
+            Layer::Overlay => "Overlay",
+            Layer::Window => "Window",
+            _ => "Unknown",
+        })
+    }
 }
 
 #[doc(hidden)]
@@ -173,6 +204,36 @@ pub enum RelationType {
     LastDefined,
     #[doc(hidden)]
     __Unknown(i32),
+}
+
+impl fmt::Display for RelationType {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "RelationType::{}", match *self {
+            RelationType::Null => "Null",
+            RelationType::ControlledBy => "ControlledBy",
+            RelationType::ControllerFor => "ControllerFor",
+            RelationType::LabelFor => "LabelFor",
+            RelationType::LabelledBy => "LabelledBy",
+            RelationType::MemberOf => "MemberOf",
+            RelationType::NodeChildOf => "NodeChildOf",
+            RelationType::FlowsTo => "FlowsTo",
+            RelationType::FlowsFrom => "FlowsFrom",
+            RelationType::SubwindowOf => "SubwindowOf",
+            RelationType::Embeds => "Embeds",
+            RelationType::EmbeddedBy => "EmbeddedBy",
+            RelationType::PopupFor => "PopupFor",
+            RelationType::ParentWindowOf => "ParentWindowOf",
+            RelationType::DescribedBy => "DescribedBy",
+            RelationType::DescriptionFor => "DescriptionFor",
+            RelationType::NodeParentOf => "NodeParentOf",
+            RelationType::Details => "Details",
+            RelationType::DetailsFor => "DetailsFor",
+            RelationType::ErrorMessage => "ErrorMessage",
+            RelationType::ErrorFor => "ErrorFor",
+            RelationType::LastDefined => "LastDefined",
+            _ => "Unknown",
+        })
+    }
 }
 
 #[doc(hidden)]
@@ -393,6 +454,138 @@ pub enum Role {
     LastDefined,
     #[doc(hidden)]
     __Unknown(i32),
+}
+
+impl fmt::Display for Role {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Role::{}", match *self {
+            Role::Invalid => "Invalid",
+            Role::AcceleratorLabel => "AcceleratorLabel",
+            Role::Alert => "Alert",
+            Role::Animation => "Animation",
+            Role::Arrow => "Arrow",
+            Role::Calendar => "Calendar",
+            Role::Canvas => "Canvas",
+            Role::CheckBox => "CheckBox",
+            Role::CheckMenuItem => "CheckMenuItem",
+            Role::ColorChooser => "ColorChooser",
+            Role::ColumnHeader => "ColumnHeader",
+            Role::ComboBox => "ComboBox",
+            Role::DateEditor => "DateEditor",
+            Role::DesktopIcon => "DesktopIcon",
+            Role::DesktopFrame => "DesktopFrame",
+            Role::Dial => "Dial",
+            Role::Dialog => "Dialog",
+            Role::DirectoryPane => "DirectoryPane",
+            Role::DrawingArea => "DrawingArea",
+            Role::FileChooser => "FileChooser",
+            Role::Filler => "Filler",
+            Role::FontChooser => "FontChooser",
+            Role::Frame => "Frame",
+            Role::GlassPane => "GlassPane",
+            Role::HtmlContainer => "HtmlContainer",
+            Role::Icon => "Icon",
+            Role::Image => "Image",
+            Role::InternalFrame => "InternalFrame",
+            Role::Label => "Label",
+            Role::LayeredPane => "LayeredPane",
+            Role::List => "List",
+            Role::ListItem => "ListItem",
+            Role::Menu => "Menu",
+            Role::MenuBar => "MenuBar",
+            Role::MenuItem => "MenuItem",
+            Role::OptionPane => "OptionPane",
+            Role::PageTab => "PageTab",
+            Role::PageTabList => "PageTabList",
+            Role::Panel => "Panel",
+            Role::PasswordText => "PasswordText",
+            Role::PopupMenu => "PopupMenu",
+            Role::ProgressBar => "ProgressBar",
+            Role::PushButton => "PushButton",
+            Role::RadioButton => "RadioButton",
+            Role::RadioMenuItem => "RadioMenuItem",
+            Role::RootPane => "RootPane",
+            Role::RowHeader => "RowHeader",
+            Role::ScrollBar => "ScrollBar",
+            Role::ScrollPane => "ScrollPane",
+            Role::Separator => "Separator",
+            Role::Slider => "Slider",
+            Role::SplitPane => "SplitPane",
+            Role::SpinButton => "SpinButton",
+            Role::Statusbar => "Statusbar",
+            Role::Table => "Table",
+            Role::TableCell => "TableCell",
+            Role::TableColumnHeader => "TableColumnHeader",
+            Role::TableRowHeader => "TableRowHeader",
+            Role::TearOffMenuItem => "TearOffMenuItem",
+            Role::Terminal => "Terminal",
+            Role::Text => "Text",
+            Role::ToggleButton => "ToggleButton",
+            Role::ToolBar => "ToolBar",
+            Role::ToolTip => "ToolTip",
+            Role::Tree => "Tree",
+            Role::TreeTable => "TreeTable",
+            Role::Unknown => "Unknown",
+            Role::Viewport => "Viewport",
+            Role::Window => "Window",
+            Role::Header => "Header",
+            Role::Footer => "Footer",
+            Role::Paragraph => "Paragraph",
+            Role::Ruler => "Ruler",
+            Role::Application => "Application",
+            Role::Autocomplete => "Autocomplete",
+            Role::EditBar => "EditBar",
+            Role::Embedded => "Embedded",
+            Role::Entry => "Entry",
+            Role::Chart => "Chart",
+            Role::Caption => "Caption",
+            Role::DocumentFrame => "DocumentFrame",
+            Role::Heading => "Heading",
+            Role::Page => "Page",
+            Role::Section => "Section",
+            Role::RedundantObject => "RedundantObject",
+            Role::Form => "Form",
+            Role::Link => "Link",
+            Role::InputMethodWindow => "InputMethodWindow",
+            Role::TableRow => "TableRow",
+            Role::TreeItem => "TreeItem",
+            Role::DocumentSpreadsheet => "DocumentSpreadsheet",
+            Role::DocumentPresentation => "DocumentPresentation",
+            Role::DocumentText => "DocumentText",
+            Role::DocumentWeb => "DocumentWeb",
+            Role::DocumentEmail => "DocumentEmail",
+            Role::Comment => "Comment",
+            Role::ListBox => "ListBox",
+            Role::Grouping => "Grouping",
+            Role::ImageMap => "ImageMap",
+            Role::Notification => "Notification",
+            Role::InfoBar => "InfoBar",
+            Role::LevelBar => "LevelBar",
+            Role::TitleBar => "TitleBar",
+            Role::BlockQuote => "BlockQuote",
+            Role::Audio => "Audio",
+            Role::Video => "Video",
+            Role::Definition => "Definition",
+            Role::Article => "Article",
+            Role::Landmark => "Landmark",
+            Role::Log => "Log",
+            Role::Marquee => "Marquee",
+            Role::Math => "Math",
+            Role::Rating => "Rating",
+            Role::Timer => "Timer",
+            Role::DescriptionList => "DescriptionList",
+            Role::DescriptionTerm => "DescriptionTerm",
+            Role::DescriptionValue => "DescriptionValue",
+            Role::Static => "Static",
+            Role::MathFraction => "MathFraction",
+            Role::MathRoot => "MathRoot",
+            Role::Subscript => "Subscript",
+            Role::Superscript => "Superscript",
+            Role::Footnote => "Footnote",
+            Role::LastDefined => "LastDefined",
+            _ => "Unknown",
+        })
+    }
 }
 
 #[doc(hidden)]
@@ -688,6 +881,102 @@ impl SetValue for Role {
     }
 }
 
+#[cfg(any(feature = "v2_30", feature = "dox"))]
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
+#[derive(Clone, Copy)]
+pub enum ScrollType {
+    TopLeft,
+    BottomRight,
+    TopEdge,
+    BottomEdge,
+    LeftEdge,
+    RightEdge,
+    Anywhere,
+    #[doc(hidden)]
+    __Unknown(i32),
+}
+
+#[cfg(any(feature = "v2_30", feature = "dox"))]
+impl fmt::Display for ScrollType {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "ScrollType::{}", match *self {
+            ScrollType::TopLeft => "TopLeft",
+            ScrollType::BottomRight => "BottomRight",
+            ScrollType::TopEdge => "TopEdge",
+            ScrollType::BottomEdge => "BottomEdge",
+            ScrollType::LeftEdge => "LeftEdge",
+            ScrollType::RightEdge => "RightEdge",
+            ScrollType::Anywhere => "Anywhere",
+            _ => "Unknown",
+        })
+    }
+}
+
+#[cfg(any(feature = "v2_30", feature = "dox"))]
+#[doc(hidden)]
+impl ToGlib for ScrollType {
+    type GlibType = ffi::AtkScrollType;
+
+    fn to_glib(&self) -> ffi::AtkScrollType {
+        match *self {
+            ScrollType::TopLeft => ffi::ATK_SCROLL_TOP_LEFT,
+            ScrollType::BottomRight => ffi::ATK_SCROLL_BOTTOM_RIGHT,
+            ScrollType::TopEdge => ffi::ATK_SCROLL_TOP_EDGE,
+            ScrollType::BottomEdge => ffi::ATK_SCROLL_BOTTOM_EDGE,
+            ScrollType::LeftEdge => ffi::ATK_SCROLL_LEFT_EDGE,
+            ScrollType::RightEdge => ffi::ATK_SCROLL_RIGHT_EDGE,
+            ScrollType::Anywhere => ffi::ATK_SCROLL_ANYWHERE,
+            ScrollType::__Unknown(value) => value
+        }
+    }
+}
+
+#[cfg(any(feature = "v2_30", feature = "dox"))]
+#[doc(hidden)]
+impl FromGlib<ffi::AtkScrollType> for ScrollType {
+    fn from_glib(value: ffi::AtkScrollType) -> Self {
+        skip_assert_initialized!();
+        match value {
+            0 => ScrollType::TopLeft,
+            1 => ScrollType::BottomRight,
+            2 => ScrollType::TopEdge,
+            3 => ScrollType::BottomEdge,
+            4 => ScrollType::LeftEdge,
+            5 => ScrollType::RightEdge,
+            6 => ScrollType::Anywhere,
+            value => ScrollType::__Unknown(value),
+        }
+    }
+}
+
+#[cfg(any(feature = "v2_30", feature = "dox"))]
+impl StaticType for ScrollType {
+    fn static_type() -> Type {
+        unsafe { from_glib(ffi::atk_scroll_type_get_type()) }
+    }
+}
+
+#[cfg(any(feature = "v2_30", feature = "dox"))]
+impl<'a> FromValueOptional<'a> for ScrollType {
+    unsafe fn from_value_optional(value: &Value) -> Option<Self> {
+        Some(FromValue::from_value(value))
+    }
+}
+
+#[cfg(any(feature = "v2_30", feature = "dox"))]
+impl<'a> FromValue<'a> for ScrollType {
+    unsafe fn from_value(value: &Value) -> Self {
+        from_glib(gobject_ffi::g_value_get_enum(value.to_glib_none().0))
+    }
+}
+
+#[cfg(any(feature = "v2_30", feature = "dox"))]
+impl SetValue for ScrollType {
+    unsafe fn set_value(value: &mut Value, this: &Self) {
+        gobject_ffi::g_value_set_enum(value.to_glib_none_mut().0, this.to_glib())
+    }
+}
+
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
 #[derive(Clone, Copy)]
 pub enum StateType {
@@ -737,6 +1026,58 @@ pub enum StateType {
     LastDefined,
     #[doc(hidden)]
     __Unknown(i32),
+}
+
+impl fmt::Display for StateType {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "StateType::{}", match *self {
+            StateType::Invalid => "Invalid",
+            StateType::Active => "Active",
+            StateType::Armed => "Armed",
+            StateType::Busy => "Busy",
+            StateType::Checked => "Checked",
+            StateType::Defunct => "Defunct",
+            StateType::Editable => "Editable",
+            StateType::Enabled => "Enabled",
+            StateType::Expandable => "Expandable",
+            StateType::Expanded => "Expanded",
+            StateType::Focusable => "Focusable",
+            StateType::Focused => "Focused",
+            StateType::Horizontal => "Horizontal",
+            StateType::Iconified => "Iconified",
+            StateType::Modal => "Modal",
+            StateType::MultiLine => "MultiLine",
+            StateType::Multiselectable => "Multiselectable",
+            StateType::Opaque => "Opaque",
+            StateType::Pressed => "Pressed",
+            StateType::Resizable => "Resizable",
+            StateType::Selectable => "Selectable",
+            StateType::Selected => "Selected",
+            StateType::Sensitive => "Sensitive",
+            StateType::Showing => "Showing",
+            StateType::SingleLine => "SingleLine",
+            StateType::Stale => "Stale",
+            StateType::Transient => "Transient",
+            StateType::Vertical => "Vertical",
+            StateType::Visible => "Visible",
+            StateType::ManagesDescendants => "ManagesDescendants",
+            StateType::Indeterminate => "Indeterminate",
+            StateType::Truncated => "Truncated",
+            StateType::Required => "Required",
+            StateType::InvalidEntry => "InvalidEntry",
+            StateType::SupportsAutocompletion => "SupportsAutocompletion",
+            StateType::SelectableText => "SelectableText",
+            StateType::Default => "Default",
+            StateType::Animated => "Animated",
+            StateType::Visited => "Visited",
+            StateType::Checkable => "Checkable",
+            StateType::HasPopup => "HasPopup",
+            StateType::HasTooltip => "HasTooltip",
+            StateType::ReadOnly => "ReadOnly",
+            StateType::LastDefined => "LastDefined",
+            _ => "Unknown",
+        })
+    }
 }
 
 #[doc(hidden)]
@@ -908,6 +1249,43 @@ pub enum TextAttribute {
     __Unknown(i32),
 }
 
+impl fmt::Display for TextAttribute {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "TextAttribute::{}", match *self {
+            TextAttribute::Invalid => "Invalid",
+            TextAttribute::LeftMargin => "LeftMargin",
+            TextAttribute::RightMargin => "RightMargin",
+            TextAttribute::Indent => "Indent",
+            TextAttribute::Invisible => "Invisible",
+            TextAttribute::Editable => "Editable",
+            TextAttribute::PixelsAboveLines => "PixelsAboveLines",
+            TextAttribute::PixelsBelowLines => "PixelsBelowLines",
+            TextAttribute::PixelsInsideWrap => "PixelsInsideWrap",
+            TextAttribute::BgFullHeight => "BgFullHeight",
+            TextAttribute::Rise => "Rise",
+            TextAttribute::Underline => "Underline",
+            TextAttribute::Strikethrough => "Strikethrough",
+            TextAttribute::Size => "Size",
+            TextAttribute::Scale => "Scale",
+            TextAttribute::Weight => "Weight",
+            TextAttribute::Language => "Language",
+            TextAttribute::FamilyName => "FamilyName",
+            TextAttribute::BgColor => "BgColor",
+            TextAttribute::FgColor => "FgColor",
+            TextAttribute::BgStipple => "BgStipple",
+            TextAttribute::FgStipple => "FgStipple",
+            TextAttribute::WrapMode => "WrapMode",
+            TextAttribute::Direction => "Direction",
+            TextAttribute::Justification => "Justification",
+            TextAttribute::Stretch => "Stretch",
+            TextAttribute::Variant => "Variant",
+            TextAttribute::Style => "Style",
+            TextAttribute::LastDefined => "LastDefined",
+            _ => "Unknown",
+        })
+    }
+}
+
 #[doc(hidden)]
 impl ToGlib for TextAttribute {
     type GlibType = ffi::AtkTextAttribute;
@@ -1025,6 +1403,21 @@ pub enum TextBoundary {
     __Unknown(i32),
 }
 
+impl fmt::Display for TextBoundary {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "TextBoundary::{}", match *self {
+            TextBoundary::Char => "Char",
+            TextBoundary::WordStart => "WordStart",
+            TextBoundary::WordEnd => "WordEnd",
+            TextBoundary::SentenceStart => "SentenceStart",
+            TextBoundary::SentenceEnd => "SentenceEnd",
+            TextBoundary::LineStart => "LineStart",
+            TextBoundary::LineEnd => "LineEnd",
+            _ => "Unknown",
+        })
+    }
+}
+
 #[doc(hidden)]
 impl ToGlib for TextBoundary {
     type GlibType = ffi::AtkTextBoundary;
@@ -1095,6 +1488,18 @@ pub enum TextClipType {
     __Unknown(i32),
 }
 
+impl fmt::Display for TextClipType {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "TextClipType::{}", match *self {
+            TextClipType::None => "None",
+            TextClipType::Min => "Min",
+            TextClipType::Max => "Max",
+            TextClipType::Both => "Both",
+            _ => "Unknown",
+        })
+    }
+}
+
 #[doc(hidden)]
 impl ToGlib for TextClipType {
     type GlibType = ffi::AtkTextClipType;
@@ -1158,6 +1563,19 @@ pub enum TextGranularity {
     Paragraph,
     #[doc(hidden)]
     __Unknown(i32),
+}
+
+impl fmt::Display for TextGranularity {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "TextGranularity::{}", match *self {
+            TextGranularity::Char => "Char",
+            TextGranularity::Word => "Word",
+            TextGranularity::Sentence => "Sentence",
+            TextGranularity::Line => "Line",
+            TextGranularity::Paragraph => "Paragraph",
+            _ => "Unknown",
+        })
+    }
 }
 
 #[doc(hidden)]
@@ -1236,6 +1654,30 @@ pub enum ValueType {
     LastDefined,
     #[doc(hidden)]
     __Unknown(i32),
+}
+
+impl fmt::Display for ValueType {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "ValueType::{}", match *self {
+            ValueType::VeryWeak => "VeryWeak",
+            ValueType::Weak => "Weak",
+            ValueType::Acceptable => "Acceptable",
+            ValueType::Strong => "Strong",
+            ValueType::VeryStrong => "VeryStrong",
+            ValueType::VeryLow => "VeryLow",
+            ValueType::Low => "Low",
+            ValueType::Medium => "Medium",
+            ValueType::High => "High",
+            ValueType::VeryHigh => "VeryHigh",
+            ValueType::VeryBad => "VeryBad",
+            ValueType::Bad => "Bad",
+            ValueType::Good => "Good",
+            ValueType::VeryGood => "VeryGood",
+            ValueType::Best => "Best",
+            ValueType::LastDefined => "LastDefined",
+            _ => "Unknown",
+        })
+    }
 }
 
 #[doc(hidden)]

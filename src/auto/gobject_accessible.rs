@@ -7,13 +7,10 @@ use ffi;
 use glib;
 use glib::object::IsA;
 use glib::translate::*;
-use glib_ffi;
-use gobject_ffi;
-use std::mem;
-use std::ptr;
+use std::fmt;
 
 glib_wrapper! {
-    pub struct GObjectAccessible(Object<ffi::AtkGObjectAccessible, ffi::AtkGObjectAccessibleClass>): Object;
+    pub struct GObjectAccessible(Object<ffi::AtkGObjectAccessible, ffi::AtkGObjectAccessibleClass, GObjectAccessibleClass>) @extends Object;
 
     match fn {
         get_type => || ffi::atk_gobject_accessible_get_type(),
@@ -24,19 +21,27 @@ impl GObjectAccessible {
     pub fn for_object<P: IsA<glib::Object>>(obj: &P) -> Option<Object> {
         assert_initialized_main_thread!();
         unsafe {
-            from_glib_none(ffi::atk_gobject_accessible_for_object(obj.to_glib_none().0))
+            from_glib_none(ffi::atk_gobject_accessible_for_object(obj.as_ref().to_glib_none().0))
         }
     }
 }
 
-pub trait GObjectAccessibleExt {
+pub const NONE_GOBJECT_ACCESSIBLE: Option<&GObjectAccessible> = None;
+
+pub trait GObjectAccessibleExt: 'static {
     fn get_object(&self) -> Option<glib::Object>;
 }
 
 impl<O: IsA<GObjectAccessible>> GObjectAccessibleExt for O {
     fn get_object(&self) -> Option<glib::Object> {
         unsafe {
-            from_glib_none(ffi::atk_gobject_accessible_get_object(self.to_glib_none().0))
+            from_glib_none(ffi::atk_gobject_accessible_get_object(self.as_ref().to_glib_none().0))
         }
+    }
+}
+
+impl fmt::Display for GObjectAccessible {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "GObjectAccessible")
     }
 }

@@ -5,20 +5,19 @@
 use ffi;
 use glib::object::IsA;
 use glib::translate::*;
-use glib_ffi;
-use gobject_ffi;
-use std::mem;
-use std::ptr;
+use std::fmt;
 
 glib_wrapper! {
-    pub struct EditableText(Object<ffi::AtkEditableText, ffi::AtkEditableTextIface>);
+    pub struct EditableText(Interface<ffi::AtkEditableText>);
 
     match fn {
         get_type => || ffi::atk_editable_text_get_type(),
     }
 }
 
-pub trait EditableTextExt {
+pub const NONE_EDITABLE_TEXT: Option<&EditableText> = None;
+
+pub trait EditableTextExt: 'static {
     fn copy_text(&self, start_pos: i32, end_pos: i32);
 
     fn cut_text(&self, start_pos: i32, end_pos: i32);
@@ -35,25 +34,25 @@ pub trait EditableTextExt {
 impl<O: IsA<EditableText>> EditableTextExt for O {
     fn copy_text(&self, start_pos: i32, end_pos: i32) {
         unsafe {
-            ffi::atk_editable_text_copy_text(self.to_glib_none().0, start_pos, end_pos);
+            ffi::atk_editable_text_copy_text(self.as_ref().to_glib_none().0, start_pos, end_pos);
         }
     }
 
     fn cut_text(&self, start_pos: i32, end_pos: i32) {
         unsafe {
-            ffi::atk_editable_text_cut_text(self.to_glib_none().0, start_pos, end_pos);
+            ffi::atk_editable_text_cut_text(self.as_ref().to_glib_none().0, start_pos, end_pos);
         }
     }
 
     fn delete_text(&self, start_pos: i32, end_pos: i32) {
         unsafe {
-            ffi::atk_editable_text_delete_text(self.to_glib_none().0, start_pos, end_pos);
+            ffi::atk_editable_text_delete_text(self.as_ref().to_glib_none().0, start_pos, end_pos);
         }
     }
 
     fn paste_text(&self, position: i32) {
         unsafe {
-            ffi::atk_editable_text_paste_text(self.to_glib_none().0, position);
+            ffi::atk_editable_text_paste_text(self.as_ref().to_glib_none().0, position);
         }
     }
 
@@ -63,7 +62,13 @@ impl<O: IsA<EditableText>> EditableTextExt for O {
 
     fn set_text_contents(&self, string: &str) {
         unsafe {
-            ffi::atk_editable_text_set_text_contents(self.to_glib_none().0, string.to_glib_none().0);
+            ffi::atk_editable_text_set_text_contents(self.as_ref().to_glib_none().0, string.to_glib_none().0);
         }
+    }
+}
+
+impl fmt::Display for EditableText {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "EditableText")
     }
 }

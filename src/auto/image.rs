@@ -4,25 +4,26 @@
 
 use CoordType;
 use ffi;
+use glib::GString;
 use glib::object::IsA;
 use glib::translate::*;
-use glib_ffi;
-use gobject_ffi;
+use std::fmt;
 use std::mem;
-use std::ptr;
 
 glib_wrapper! {
-    pub struct Image(Object<ffi::AtkImage, ffi::AtkImageIface>);
+    pub struct Image(Interface<ffi::AtkImage>);
 
     match fn {
         get_type => || ffi::atk_image_get_type(),
     }
 }
 
-pub trait AtkImageExt {
-    fn get_image_description(&self) -> Option<String>;
+pub const NONE_IMAGE: Option<&Image> = None;
 
-    fn get_image_locale(&self) -> Option<String>;
+pub trait AtkImageExt: 'static {
+    fn get_image_description(&self) -> Option<GString>;
+
+    fn get_image_locale(&self) -> Option<GString>;
 
     fn get_image_position(&self, coord_type: CoordType) -> (i32, i32);
 
@@ -32,15 +33,15 @@ pub trait AtkImageExt {
 }
 
 impl<O: IsA<Image>> AtkImageExt for O {
-    fn get_image_description(&self) -> Option<String> {
+    fn get_image_description(&self) -> Option<GString> {
         unsafe {
-            from_glib_none(ffi::atk_image_get_image_description(self.to_glib_none().0))
+            from_glib_none(ffi::atk_image_get_image_description(self.as_ref().to_glib_none().0))
         }
     }
 
-    fn get_image_locale(&self) -> Option<String> {
+    fn get_image_locale(&self) -> Option<GString> {
         unsafe {
-            from_glib_none(ffi::atk_image_get_image_locale(self.to_glib_none().0))
+            from_glib_none(ffi::atk_image_get_image_locale(self.as_ref().to_glib_none().0))
         }
     }
 
@@ -48,7 +49,7 @@ impl<O: IsA<Image>> AtkImageExt for O {
         unsafe {
             let mut x = mem::uninitialized();
             let mut y = mem::uninitialized();
-            ffi::atk_image_get_image_position(self.to_glib_none().0, &mut x, &mut y, coord_type.to_glib());
+            ffi::atk_image_get_image_position(self.as_ref().to_glib_none().0, &mut x, &mut y, coord_type.to_glib());
             (x, y)
         }
     }
@@ -57,14 +58,20 @@ impl<O: IsA<Image>> AtkImageExt for O {
         unsafe {
             let mut width = mem::uninitialized();
             let mut height = mem::uninitialized();
-            ffi::atk_image_get_image_size(self.to_glib_none().0, &mut width, &mut height);
+            ffi::atk_image_get_image_size(self.as_ref().to_glib_none().0, &mut width, &mut height);
             (width, height)
         }
     }
 
     fn set_image_description(&self, description: &str) -> bool {
         unsafe {
-            from_glib(ffi::atk_image_set_image_description(self.to_glib_none().0, description.to_glib_none().0))
+            from_glib(ffi::atk_image_set_image_description(self.as_ref().to_glib_none().0, description.to_glib_none().0))
         }
+    }
+}
+
+impl fmt::Display for Image {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Image")
     }
 }

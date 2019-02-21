@@ -6,93 +6,85 @@ use Object;
 use ffi;
 use glib::object::IsA;
 use glib::translate::*;
-use glib_ffi;
-use gobject_ffi;
+use std::fmt;
 use std::mem;
-use std::ptr;
 
 glib_wrapper! {
-    pub struct TableCell(Object<ffi::AtkTableCell, ffi::AtkTableCellIface>): Object;
+    pub struct TableCell(Interface<ffi::AtkTableCell>) @requires Object;
 
     match fn {
         get_type => || ffi::atk_table_cell_get_type(),
     }
 }
 
-pub trait TableCellExt {
-    //#[cfg(any(feature = "v2_12", feature = "dox"))]
+pub const NONE_TABLE_CELL: Option<&TableCell> = None;
+
+pub trait TableCellExt: 'static {
     //fn get_column_header_cells(&self) -> /*Unknown conversion*//*Unimplemented*/PtrArray TypeId { ns_id: 1, id: 9 };
 
-    #[cfg(any(feature = "v2_12", feature = "dox"))]
     fn get_column_span(&self) -> i32;
 
-    #[cfg(any(feature = "v2_12", feature = "dox"))]
     fn get_position(&self) -> Option<(i32, i32)>;
 
-    #[cfg(any(feature = "v2_12", feature = "dox"))]
     fn get_row_column_span(&self) -> Option<(i32, i32, i32, i32)>;
 
-    //#[cfg(any(feature = "v2_12", feature = "dox"))]
     //fn get_row_header_cells(&self) -> /*Unknown conversion*//*Unimplemented*/PtrArray TypeId { ns_id: 1, id: 9 };
 
-    #[cfg(any(feature = "v2_12", feature = "dox"))]
     fn get_row_span(&self) -> i32;
 
-    #[cfg(any(feature = "v2_12", feature = "dox"))]
     fn get_table(&self) -> Option<Object>;
 }
 
 impl<O: IsA<TableCell>> TableCellExt for O {
-    //#[cfg(any(feature = "v2_12", feature = "dox"))]
     //fn get_column_header_cells(&self) -> /*Unknown conversion*//*Unimplemented*/PtrArray TypeId { ns_id: 1, id: 9 } {
     //    unsafe { TODO: call ffi::atk_table_cell_get_column_header_cells() }
     //}
 
-    #[cfg(any(feature = "v2_12", feature = "dox"))]
     fn get_column_span(&self) -> i32 {
         unsafe {
-            ffi::atk_table_cell_get_column_span(self.to_glib_none().0)
+            ffi::atk_table_cell_get_column_span(self.as_ref().to_glib_none().0)
         }
     }
 
-    #[cfg(any(feature = "v2_12", feature = "dox"))]
     fn get_position(&self) -> Option<(i32, i32)> {
         unsafe {
             let mut row = mem::uninitialized();
             let mut column = mem::uninitialized();
-            let ret = from_glib(ffi::atk_table_cell_get_position(self.to_glib_none().0, &mut row, &mut column));
+            let ret = from_glib(ffi::atk_table_cell_get_position(self.as_ref().to_glib_none().0, &mut row, &mut column));
             if ret { Some((row, column)) } else { None }
         }
     }
 
-    #[cfg(any(feature = "v2_12", feature = "dox"))]
     fn get_row_column_span(&self) -> Option<(i32, i32, i32, i32)> {
         unsafe {
             let mut row = mem::uninitialized();
             let mut column = mem::uninitialized();
             let mut row_span = mem::uninitialized();
             let mut column_span = mem::uninitialized();
-            let ret = from_glib(ffi::atk_table_cell_get_row_column_span(self.to_glib_none().0, &mut row, &mut column, &mut row_span, &mut column_span));
+            let ret = from_glib(ffi::atk_table_cell_get_row_column_span(self.as_ref().to_glib_none().0, &mut row, &mut column, &mut row_span, &mut column_span));
             if ret { Some((row, column, row_span, column_span)) } else { None }
         }
     }
 
-    //#[cfg(any(feature = "v2_12", feature = "dox"))]
     //fn get_row_header_cells(&self) -> /*Unknown conversion*//*Unimplemented*/PtrArray TypeId { ns_id: 1, id: 9 } {
     //    unsafe { TODO: call ffi::atk_table_cell_get_row_header_cells() }
     //}
 
-    #[cfg(any(feature = "v2_12", feature = "dox"))]
     fn get_row_span(&self) -> i32 {
         unsafe {
-            ffi::atk_table_cell_get_row_span(self.to_glib_none().0)
+            ffi::atk_table_cell_get_row_span(self.as_ref().to_glib_none().0)
         }
     }
 
-    #[cfg(any(feature = "v2_12", feature = "dox"))]
     fn get_table(&self) -> Option<Object> {
         unsafe {
-            from_glib_full(ffi::atk_table_cell_get_table(self.to_glib_none().0))
+            from_glib_full(ffi::atk_table_cell_get_table(self.as_ref().to_glib_none().0))
         }
+    }
+}
+
+impl fmt::Display for TableCell {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "TableCell")
     }
 }
