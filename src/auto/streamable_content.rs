@@ -2,17 +2,17 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use ffi;
-use glib::GString;
+use atk_sys;
 use glib::object::IsA;
 use glib::translate::*;
+use glib::GString;
 use std::fmt;
 
 glib_wrapper! {
-    pub struct StreamableContent(Interface<ffi::AtkStreamableContent>);
+    pub struct StreamableContent(Interface<atk_sys::AtkStreamableContent>);
 
     match fn {
-        get_type => || ffi::atk_streamable_content_get_type(),
+        get_type => || atk_sys::atk_streamable_content_get_type(),
     }
 }
 
@@ -31,23 +31,27 @@ pub trait StreamableContentExt: 'static {
 impl<O: IsA<StreamableContent>> StreamableContentExt for O {
     fn get_mime_type(&self, i: i32) -> Option<GString> {
         unsafe {
-            from_glib_none(ffi::atk_streamable_content_get_mime_type(self.as_ref().to_glib_none().0, i))
+            from_glib_none(atk_sys::atk_streamable_content_get_mime_type(
+                self.as_ref().to_glib_none().0,
+                i,
+            ))
         }
     }
 
     fn get_n_mime_types(&self) -> i32 {
-        unsafe {
-            ffi::atk_streamable_content_get_n_mime_types(self.as_ref().to_glib_none().0)
-        }
+        unsafe { atk_sys::atk_streamable_content_get_n_mime_types(self.as_ref().to_glib_none().0) }
     }
 
     //fn get_stream(&self, mime_type: &str) -> /*Ignored*/Option<glib::IOChannel> {
-    //    unsafe { TODO: call ffi::atk_streamable_content_get_stream() }
+    //    unsafe { TODO: call atk_sys:atk_streamable_content_get_stream() }
     //}
 
     fn get_uri(&self, mime_type: &str) -> Option<GString> {
         unsafe {
-            from_glib_none(ffi::atk_streamable_content_get_uri(self.as_ref().to_glib_none().0, mime_type.to_glib_none().0))
+            from_glib_none(atk_sys::atk_streamable_content_get_uri(
+                self.as_ref().to_glib_none().0,
+                mime_type.to_glib_none().0,
+            ))
         }
     }
 }

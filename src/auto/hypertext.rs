@@ -2,24 +2,24 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use Hyperlink;
-use ffi;
+use atk_sys;
 use glib::object::Cast;
 use glib::object::IsA;
-use glib::signal::SignalHandlerId;
 use glib::signal::connect_raw;
+use glib::signal::SignalHandlerId;
 use glib::translate::*;
-use glib_ffi;
+use glib_sys;
 use libc;
 use std::boxed::Box as Box_;
 use std::fmt;
 use std::mem::transmute;
+use Hyperlink;
 
 glib_wrapper! {
-    pub struct Hypertext(Interface<ffi::AtkHypertext>);
+    pub struct Hypertext(Interface<atk_sys::AtkHypertext>);
 
     match fn {
-        get_type => || ffi::atk_hypertext_get_type(),
+        get_type => || atk_sys::atk_hypertext_get_type(),
     }
 }
 
@@ -38,35 +38,42 @@ pub trait HypertextExt: 'static {
 impl<O: IsA<Hypertext>> HypertextExt for O {
     fn get_link(&self, link_index: i32) -> Option<Hyperlink> {
         unsafe {
-            from_glib_none(ffi::atk_hypertext_get_link(self.as_ref().to_glib_none().0, link_index))
+            from_glib_none(atk_sys::atk_hypertext_get_link(
+                self.as_ref().to_glib_none().0,
+                link_index,
+            ))
         }
     }
 
     fn get_link_index(&self, char_index: i32) -> i32 {
-        unsafe {
-            ffi::atk_hypertext_get_link_index(self.as_ref().to_glib_none().0, char_index)
-        }
+        unsafe { atk_sys::atk_hypertext_get_link_index(self.as_ref().to_glib_none().0, char_index) }
     }
 
     fn get_n_links(&self) -> i32 {
-        unsafe {
-            ffi::atk_hypertext_get_n_links(self.as_ref().to_glib_none().0)
-        }
+        unsafe { atk_sys::atk_hypertext_get_n_links(self.as_ref().to_glib_none().0) }
     }
 
     fn connect_link_selected<F: Fn(&Self, i32) + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn link_selected_trampoline<P, F: Fn(&P, i32) + 'static>(
+            this: *mut atk_sys::AtkHypertext,
+            arg1: libc::c_int,
+            f: glib_sys::gpointer,
+        ) where
+            P: IsA<Hypertext>,
+        {
+            let f: &F = &*(f as *const F);
+            f(&Hypertext::from_glib_borrow(this).unsafe_cast(), arg1)
+        }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"link-selected\0".as_ptr() as *const _,
-                Some(transmute(link_selected_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"link-selected\0".as_ptr() as *const _,
+                Some(transmute(link_selected_trampoline::<Self, F> as usize)),
+                Box_::into_raw(f),
+            )
         }
     }
-}
-
-unsafe extern "C" fn link_selected_trampoline<P, F: Fn(&P, i32) + 'static>(this: *mut ffi::AtkHypertext, arg1: libc::c_int, f: glib_ffi::gpointer)
-where P: IsA<Hypertext> {
-    let f: &F = transmute(f);
-    f(&Hypertext::from_glib_borrow(this).unsafe_cast(), arg1)
 }
 
 impl fmt::Display for Hypertext {
