@@ -2,9 +2,9 @@
 // See the COPYRIGHT file at the top-level directory of this distribution.
 // Licensed under the MIT license, see the LICENSE file or <http://opensource.org/licenses/MIT>
 
-use glib::GString;
+use atk_sys;
 use glib::translate::*;
-use ffi;
+use glib::GString;
 use std::fmt;
 
 pub struct Attribute {
@@ -15,15 +15,15 @@ pub struct Attribute {
 impl fmt::Display for Attribute {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         f.debug_struct("Attribute")
-         .field("name", &self.name)
-         .field("value", &self.value)
-         .finish()
+            .field("name", &self.name)
+            .field("value", &self.value)
+            .finish()
     }
 }
 
 #[doc(hidden)]
-impl FromGlib<ffi::AtkAttribute> for Attribute {
-    fn from_glib(value: ffi::AtkAttribute) -> Self {
+impl FromGlib<atk_sys::AtkAttribute> for Attribute {
+    fn from_glib(value: atk_sys::AtkAttribute) -> Self {
         skip_assert_initialized!();
         unsafe {
             Attribute {
@@ -36,12 +36,12 @@ impl FromGlib<ffi::AtkAttribute> for Attribute {
 
 #[doc(hidden)]
 impl ToGlib for Attribute {
-    type GlibType = ffi::AtkAttribute;
+    type GlibType = atk_sys::AtkAttribute;
 
-    fn to_glib(&self) -> ffi::AtkAttribute {
-        ffi::AtkAttribute {
+    fn to_glib(&self) -> atk_sys::AtkAttribute {
+        atk_sys::AtkAttribute {
             name: self.name.to_glib_none().0,
-            value: self.value.to_glib_none().0
+            value: self.value.to_glib_none().0,
         }
     }
 }

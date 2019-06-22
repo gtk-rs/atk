@@ -2,23 +2,23 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use Object;
-use ffi;
+use atk_sys;
 use glib::object::Cast;
 use glib::object::IsA;
-use glib::signal::SignalHandlerId;
 use glib::signal::connect_raw;
+use glib::signal::SignalHandlerId;
 use glib::translate::*;
-use glib_ffi;
+use glib_sys;
 use std::boxed::Box as Box_;
 use std::fmt;
 use std::mem::transmute;
+use Object;
 
 glib_wrapper! {
-    pub struct Window(Interface<ffi::AtkWindow>) @requires Object;
+    pub struct Window(Interface<atk_sys::AtkWindow>) @requires Object;
 
     match fn {
-        get_type => || ffi::atk_window_get_type(),
+        get_type => || atk_sys::atk_window_get_type(),
     }
 }
 
@@ -46,130 +46,193 @@ pub trait AtkWindowExt: 'static {
 
 impl<O: IsA<Window>> AtkWindowExt for O {
     fn connect_activate<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn activate_trampoline<P, F: Fn(&P) + 'static>(
+            this: *mut atk_sys::AtkWindow,
+            f: glib_sys::gpointer,
+        ) where
+            P: IsA<Window>,
+        {
+            let f: &F = &*(f as *const F);
+            f(&Window::from_glib_borrow(this).unsafe_cast())
+        }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"activate\0".as_ptr() as *const _,
-                Some(transmute(activate_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"activate\0".as_ptr() as *const _,
+                Some(transmute(activate_trampoline::<Self, F> as usize)),
+                Box_::into_raw(f),
+            )
         }
     }
 
     fn connect_create<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn create_trampoline<P, F: Fn(&P) + 'static>(
+            this: *mut atk_sys::AtkWindow,
+            f: glib_sys::gpointer,
+        ) where
+            P: IsA<Window>,
+        {
+            let f: &F = &*(f as *const F);
+            f(&Window::from_glib_borrow(this).unsafe_cast())
+        }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"create\0".as_ptr() as *const _,
-                Some(transmute(create_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"create\0".as_ptr() as *const _,
+                Some(transmute(create_trampoline::<Self, F> as usize)),
+                Box_::into_raw(f),
+            )
         }
     }
 
     fn connect_deactivate<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn deactivate_trampoline<P, F: Fn(&P) + 'static>(
+            this: *mut atk_sys::AtkWindow,
+            f: glib_sys::gpointer,
+        ) where
+            P: IsA<Window>,
+        {
+            let f: &F = &*(f as *const F);
+            f(&Window::from_glib_borrow(this).unsafe_cast())
+        }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"deactivate\0".as_ptr() as *const _,
-                Some(transmute(deactivate_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"deactivate\0".as_ptr() as *const _,
+                Some(transmute(deactivate_trampoline::<Self, F> as usize)),
+                Box_::into_raw(f),
+            )
         }
     }
 
     fn connect_destroy<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn destroy_trampoline<P, F: Fn(&P) + 'static>(
+            this: *mut atk_sys::AtkWindow,
+            f: glib_sys::gpointer,
+        ) where
+            P: IsA<Window>,
+        {
+            let f: &F = &*(f as *const F);
+            f(&Window::from_glib_borrow(this).unsafe_cast())
+        }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"destroy\0".as_ptr() as *const _,
-                Some(transmute(destroy_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"destroy\0".as_ptr() as *const _,
+                Some(transmute(destroy_trampoline::<Self, F> as usize)),
+                Box_::into_raw(f),
+            )
         }
     }
 
     fn connect_maximize<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn maximize_trampoline<P, F: Fn(&P) + 'static>(
+            this: *mut atk_sys::AtkWindow,
+            f: glib_sys::gpointer,
+        ) where
+            P: IsA<Window>,
+        {
+            let f: &F = &*(f as *const F);
+            f(&Window::from_glib_borrow(this).unsafe_cast())
+        }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"maximize\0".as_ptr() as *const _,
-                Some(transmute(maximize_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"maximize\0".as_ptr() as *const _,
+                Some(transmute(maximize_trampoline::<Self, F> as usize)),
+                Box_::into_raw(f),
+            )
         }
     }
 
     fn connect_minimize<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn minimize_trampoline<P, F: Fn(&P) + 'static>(
+            this: *mut atk_sys::AtkWindow,
+            f: glib_sys::gpointer,
+        ) where
+            P: IsA<Window>,
+        {
+            let f: &F = &*(f as *const F);
+            f(&Window::from_glib_borrow(this).unsafe_cast())
+        }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"minimize\0".as_ptr() as *const _,
-                Some(transmute(minimize_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"minimize\0".as_ptr() as *const _,
+                Some(transmute(minimize_trampoline::<Self, F> as usize)),
+                Box_::into_raw(f),
+            )
         }
     }
 
     fn connect_move<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn move_trampoline<P, F: Fn(&P) + 'static>(
+            this: *mut atk_sys::AtkWindow,
+            f: glib_sys::gpointer,
+        ) where
+            P: IsA<Window>,
+        {
+            let f: &F = &*(f as *const F);
+            f(&Window::from_glib_borrow(this).unsafe_cast())
+        }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"move\0".as_ptr() as *const _,
-                Some(transmute(move_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"move\0".as_ptr() as *const _,
+                Some(transmute(move_trampoline::<Self, F> as usize)),
+                Box_::into_raw(f),
+            )
         }
     }
 
     fn connect_resize<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn resize_trampoline<P, F: Fn(&P) + 'static>(
+            this: *mut atk_sys::AtkWindow,
+            f: glib_sys::gpointer,
+        ) where
+            P: IsA<Window>,
+        {
+            let f: &F = &*(f as *const F);
+            f(&Window::from_glib_borrow(this).unsafe_cast())
+        }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"resize\0".as_ptr() as *const _,
-                Some(transmute(resize_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"resize\0".as_ptr() as *const _,
+                Some(transmute(resize_trampoline::<Self, F> as usize)),
+                Box_::into_raw(f),
+            )
         }
     }
 
     fn connect_restore<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn restore_trampoline<P, F: Fn(&P) + 'static>(
+            this: *mut atk_sys::AtkWindow,
+            f: glib_sys::gpointer,
+        ) where
+            P: IsA<Window>,
+        {
+            let f: &F = &*(f as *const F);
+            f(&Window::from_glib_borrow(this).unsafe_cast())
+        }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"restore\0".as_ptr() as *const _,
-                Some(transmute(restore_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"restore\0".as_ptr() as *const _,
+                Some(transmute(restore_trampoline::<Self, F> as usize)),
+                Box_::into_raw(f),
+            )
         }
     }
-}
-
-unsafe extern "C" fn activate_trampoline<P, F: Fn(&P) + 'static>(this: *mut ffi::AtkWindow, f: glib_ffi::gpointer)
-where P: IsA<Window> {
-    let f: &F = transmute(f);
-    f(&Window::from_glib_borrow(this).unsafe_cast())
-}
-
-unsafe extern "C" fn create_trampoline<P, F: Fn(&P) + 'static>(this: *mut ffi::AtkWindow, f: glib_ffi::gpointer)
-where P: IsA<Window> {
-    let f: &F = transmute(f);
-    f(&Window::from_glib_borrow(this).unsafe_cast())
-}
-
-unsafe extern "C" fn deactivate_trampoline<P, F: Fn(&P) + 'static>(this: *mut ffi::AtkWindow, f: glib_ffi::gpointer)
-where P: IsA<Window> {
-    let f: &F = transmute(f);
-    f(&Window::from_glib_borrow(this).unsafe_cast())
-}
-
-unsafe extern "C" fn destroy_trampoline<P, F: Fn(&P) + 'static>(this: *mut ffi::AtkWindow, f: glib_ffi::gpointer)
-where P: IsA<Window> {
-    let f: &F = transmute(f);
-    f(&Window::from_glib_borrow(this).unsafe_cast())
-}
-
-unsafe extern "C" fn maximize_trampoline<P, F: Fn(&P) + 'static>(this: *mut ffi::AtkWindow, f: glib_ffi::gpointer)
-where P: IsA<Window> {
-    let f: &F = transmute(f);
-    f(&Window::from_glib_borrow(this).unsafe_cast())
-}
-
-unsafe extern "C" fn minimize_trampoline<P, F: Fn(&P) + 'static>(this: *mut ffi::AtkWindow, f: glib_ffi::gpointer)
-where P: IsA<Window> {
-    let f: &F = transmute(f);
-    f(&Window::from_glib_borrow(this).unsafe_cast())
-}
-
-unsafe extern "C" fn move_trampoline<P, F: Fn(&P) + 'static>(this: *mut ffi::AtkWindow, f: glib_ffi::gpointer)
-where P: IsA<Window> {
-    let f: &F = transmute(f);
-    f(&Window::from_glib_borrow(this).unsafe_cast())
-}
-
-unsafe extern "C" fn resize_trampoline<P, F: Fn(&P) + 'static>(this: *mut ffi::AtkWindow, f: glib_ffi::gpointer)
-where P: IsA<Window> {
-    let f: &F = transmute(f);
-    f(&Window::from_glib_borrow(this).unsafe_cast())
-}
-
-unsafe extern "C" fn restore_trampoline<P, F: Fn(&P) + 'static>(this: *mut ffi::AtkWindow, f: glib_ffi::gpointer)
-where P: IsA<Window> {
-    let f: &F = transmute(f);
-    f(&Window::from_glib_borrow(this).unsafe_cast())
 }
 
 impl fmt::Display for Window {
