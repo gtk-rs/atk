@@ -8,6 +8,7 @@ use glib::object::IsA;
 use glib::signal::connect_raw;
 use glib::signal::SignalHandlerId;
 use glib::translate::*;
+use glib::value::SetValueOptional;
 use glib::GString;
 use glib::StaticType;
 use glib::Value;
@@ -37,7 +38,8 @@ pub const NONE_OBJECT: Option<&Object> = None;
 pub trait AtkObjectExt: 'static {
     fn add_relationship<P: IsA<Object>>(&self, relationship: RelationType, target: &P) -> bool;
 
-    //fn connect_property_change_handler(&self, handler: /*Unimplemented*/Fn(&Object, /*Ignored*/PropertyValues)) -> u32;
+    #[cfg(any(feature = "v2_34", feature = "dox"))]
+    fn get_accessible_id(&self) -> Option<GString>;
 
     //fn get_attributes(&self) -> /*Ignored*/Option<AttributeSet>;
 
@@ -71,9 +73,10 @@ pub trait AtkObjectExt: 'static {
 
     fn ref_state_set(&self) -> Option<StateSet>;
 
-    fn remove_property_change_handler(&self, handler_id: u32);
-
     fn remove_relationship<P: IsA<Object>>(&self, relationship: RelationType, target: &P) -> bool;
+
+    #[cfg(any(feature = "v2_34", feature = "dox"))]
+    fn set_accessible_id(&self, name: &str);
 
     fn set_description(&self, description: &str);
 
@@ -99,7 +102,10 @@ pub trait AtkObjectExt: 'static {
 
     fn get_property_accessible_parent(&self) -> Option<Object>;
 
-    fn set_property_accessible_parent(&self, accessible_parent: Option<&Object>);
+    fn set_property_accessible_parent<P: IsA<Object> + SetValueOptional>(
+        &self,
+        accessible_parent: Option<&P>,
+    );
 
     fn get_property_accessible_role(&self) -> Role;
 
@@ -111,9 +117,9 @@ pub trait AtkObjectExt: 'static {
 
     fn get_property_accessible_table_caption_object(&self) -> Option<Object>;
 
-    fn set_property_accessible_table_caption_object(
+    fn set_property_accessible_table_caption_object<P: IsA<Object> + SetValueOptional>(
         &self,
-        accessible_table_caption_object: Option<&Object>,
+        accessible_table_caption_object: Option<&P>,
     );
 
     fn get_property_accessible_table_column_description(&self) -> Option<GString>;
@@ -125,9 +131,9 @@ pub trait AtkObjectExt: 'static {
 
     fn get_property_accessible_table_column_header(&self) -> Option<Object>;
 
-    fn set_property_accessible_table_column_header(
+    fn set_property_accessible_table_column_header<P: IsA<Object> + SetValueOptional>(
         &self,
-        accessible_table_column_header: Option<&Object>,
+        accessible_table_column_header: Option<&P>,
     );
 
     fn get_property_accessible_table_row_description(&self) -> Option<GString>;
@@ -139,14 +145,17 @@ pub trait AtkObjectExt: 'static {
 
     fn get_property_accessible_table_row_header(&self) -> Option<Object>;
 
-    fn set_property_accessible_table_row_header(
+    fn set_property_accessible_table_row_header<P: IsA<Object> + SetValueOptional>(
         &self,
-        accessible_table_row_header: Option<&Object>,
+        accessible_table_row_header: Option<&P>,
     );
 
     fn get_property_accessible_table_summary(&self) -> Option<Object>;
 
-    fn set_property_accessible_table_summary(&self, accessible_table_summary: Option<&Object>);
+    fn set_property_accessible_table_summary<P: IsA<Object> + SetValueOptional>(
+        &self,
+        accessible_table_summary: Option<&P>,
+    );
 
     fn get_property_accessible_value(&self) -> f64;
 
@@ -255,9 +264,14 @@ impl<O: IsA<Object>> AtkObjectExt for O {
         }
     }
 
-    //fn connect_property_change_handler(&self, handler: /*Unimplemented*/Fn(&Object, /*Ignored*/PropertyValues)) -> u32 {
-    //    unsafe { TODO: call atk_sys:atk_object_connect_property_change_handler() }
-    //}
+    #[cfg(any(feature = "v2_34", feature = "dox"))]
+    fn get_accessible_id(&self) -> Option<GString> {
+        unsafe {
+            from_glib_none(atk_sys::atk_object_get_accessible_id(
+                self.as_ref().to_glib_none().0,
+            ))
+        }
+    }
 
     //fn get_attributes(&self) -> /*Ignored*/Option<AttributeSet> {
     //    unsafe { TODO: call atk_sys:atk_object_get_attributes() }
@@ -362,15 +376,6 @@ impl<O: IsA<Object>> AtkObjectExt for O {
         }
     }
 
-    fn remove_property_change_handler(&self, handler_id: u32) {
-        unsafe {
-            atk_sys::atk_object_remove_property_change_handler(
-                self.as_ref().to_glib_none().0,
-                handler_id,
-            );
-        }
-    }
-
     fn remove_relationship<P: IsA<Object>>(&self, relationship: RelationType, target: &P) -> bool {
         unsafe {
             from_glib(atk_sys::atk_object_remove_relationship(
@@ -378,6 +383,16 @@ impl<O: IsA<Object>> AtkObjectExt for O {
                 relationship.to_glib(),
                 target.as_ref().to_glib_none().0,
             ))
+        }
+    }
+
+    #[cfg(any(feature = "v2_34", feature = "dox"))]
+    fn set_accessible_id(&self, name: &str) {
+        unsafe {
+            atk_sys::atk_object_set_accessible_id(
+                self.as_ref().to_glib_none().0,
+                name.to_glib_none().0,
+            );
         }
     }
 
@@ -419,7 +434,10 @@ impl<O: IsA<Object>> AtkObjectExt for O {
                 b"accessible-component-layer\0".as_ptr() as *const _,
                 value.to_glib_none_mut().0,
             );
-            value.get().unwrap()
+            value
+                .get()
+                .expect("Return Value for property `accessible-component-layer` getter")
+                .unwrap()
         }
     }
 
@@ -431,7 +449,10 @@ impl<O: IsA<Object>> AtkObjectExt for O {
                 b"accessible-component-mdi-zorder\0".as_ptr() as *const _,
                 value.to_glib_none_mut().0,
             );
-            value.get().unwrap()
+            value
+                .get()
+                .expect("Return Value for property `accessible-component-mdi-zorder` getter")
+                .unwrap()
         }
     }
 
@@ -443,7 +464,9 @@ impl<O: IsA<Object>> AtkObjectExt for O {
                 b"accessible-description\0".as_ptr() as *const _,
                 value.to_glib_none_mut().0,
             );
-            value.get()
+            value
+                .get()
+                .expect("Return Value for property `accessible-description` getter")
         }
     }
 
@@ -465,7 +488,10 @@ impl<O: IsA<Object>> AtkObjectExt for O {
                 b"accessible-hypertext-nlinks\0".as_ptr() as *const _,
                 value.to_glib_none_mut().0,
             );
-            value.get().unwrap()
+            value
+                .get()
+                .expect("Return Value for property `accessible-hypertext-nlinks` getter")
+                .unwrap()
         }
     }
 
@@ -477,7 +503,9 @@ impl<O: IsA<Object>> AtkObjectExt for O {
                 b"accessible-name\0".as_ptr() as *const _,
                 value.to_glib_none_mut().0,
             );
-            value.get()
+            value
+                .get()
+                .expect("Return Value for property `accessible-name` getter")
         }
     }
 
@@ -499,11 +527,16 @@ impl<O: IsA<Object>> AtkObjectExt for O {
                 b"accessible-parent\0".as_ptr() as *const _,
                 value.to_glib_none_mut().0,
             );
-            value.get()
+            value
+                .get()
+                .expect("Return Value for property `accessible-parent` getter")
         }
     }
 
-    fn set_property_accessible_parent(&self, accessible_parent: Option<&Object>) {
+    fn set_property_accessible_parent<P: IsA<Object> + SetValueOptional>(
+        &self,
+        accessible_parent: Option<&P>,
+    ) {
         unsafe {
             gobject_sys::g_object_set_property(
                 self.to_glib_none().0 as *mut gobject_sys::GObject,
@@ -521,7 +554,10 @@ impl<O: IsA<Object>> AtkObjectExt for O {
                 b"accessible-role\0".as_ptr() as *const _,
                 value.to_glib_none_mut().0,
             );
-            value.get().unwrap()
+            value
+                .get()
+                .expect("Return Value for property `accessible-role` getter")
+                .unwrap()
         }
     }
 
@@ -543,7 +579,9 @@ impl<O: IsA<Object>> AtkObjectExt for O {
                 b"accessible-table-caption\0".as_ptr() as *const _,
                 value.to_glib_none_mut().0,
             );
-            value.get()
+            value
+                .get()
+                .expect("Return Value for property `accessible-table-caption` getter")
         }
     }
 
@@ -565,13 +603,15 @@ impl<O: IsA<Object>> AtkObjectExt for O {
                 b"accessible-table-caption-object\0".as_ptr() as *const _,
                 value.to_glib_none_mut().0,
             );
-            value.get()
+            value
+                .get()
+                .expect("Return Value for property `accessible-table-caption-object` getter")
         }
     }
 
-    fn set_property_accessible_table_caption_object(
+    fn set_property_accessible_table_caption_object<P: IsA<Object> + SetValueOptional>(
         &self,
-        accessible_table_caption_object: Option<&Object>,
+        accessible_table_caption_object: Option<&P>,
     ) {
         unsafe {
             gobject_sys::g_object_set_property(
@@ -592,7 +632,9 @@ impl<O: IsA<Object>> AtkObjectExt for O {
                 b"accessible-table-column-description\0".as_ptr() as *const _,
                 value.to_glib_none_mut().0,
             );
-            value.get()
+            value
+                .get()
+                .expect("Return Value for property `accessible-table-column-description` getter")
         }
     }
 
@@ -619,13 +661,15 @@ impl<O: IsA<Object>> AtkObjectExt for O {
                 b"accessible-table-column-header\0".as_ptr() as *const _,
                 value.to_glib_none_mut().0,
             );
-            value.get()
+            value
+                .get()
+                .expect("Return Value for property `accessible-table-column-header` getter")
         }
     }
 
-    fn set_property_accessible_table_column_header(
+    fn set_property_accessible_table_column_header<P: IsA<Object> + SetValueOptional>(
         &self,
-        accessible_table_column_header: Option<&Object>,
+        accessible_table_column_header: Option<&P>,
     ) {
         unsafe {
             gobject_sys::g_object_set_property(
@@ -644,7 +688,9 @@ impl<O: IsA<Object>> AtkObjectExt for O {
                 b"accessible-table-row-description\0".as_ptr() as *const _,
                 value.to_glib_none_mut().0,
             );
-            value.get()
+            value
+                .get()
+                .expect("Return Value for property `accessible-table-row-description` getter")
         }
     }
 
@@ -671,13 +717,15 @@ impl<O: IsA<Object>> AtkObjectExt for O {
                 b"accessible-table-row-header\0".as_ptr() as *const _,
                 value.to_glib_none_mut().0,
             );
-            value.get()
+            value
+                .get()
+                .expect("Return Value for property `accessible-table-row-header` getter")
         }
     }
 
-    fn set_property_accessible_table_row_header(
+    fn set_property_accessible_table_row_header<P: IsA<Object> + SetValueOptional>(
         &self,
-        accessible_table_row_header: Option<&Object>,
+        accessible_table_row_header: Option<&P>,
     ) {
         unsafe {
             gobject_sys::g_object_set_property(
@@ -696,11 +744,16 @@ impl<O: IsA<Object>> AtkObjectExt for O {
                 b"accessible-table-summary\0".as_ptr() as *const _,
                 value.to_glib_none_mut().0,
             );
-            value.get()
+            value
+                .get()
+                .expect("Return Value for property `accessible-table-summary` getter")
         }
     }
 
-    fn set_property_accessible_table_summary(&self, accessible_table_summary: Option<&Object>) {
+    fn set_property_accessible_table_summary<P: IsA<Object> + SetValueOptional>(
+        &self,
+        accessible_table_summary: Option<&P>,
+    ) {
         unsafe {
             gobject_sys::g_object_set_property(
                 self.to_glib_none().0 as *mut gobject_sys::GObject,
@@ -718,7 +771,10 @@ impl<O: IsA<Object>> AtkObjectExt for O {
                 b"accessible-value\0".as_ptr() as *const _,
                 value.to_glib_none_mut().0,
             );
-            value.get().unwrap()
+            value
+                .get()
+                .expect("Return Value for property `accessible-value` getter")
+                .unwrap()
         }
     }
 
