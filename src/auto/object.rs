@@ -801,7 +801,7 @@ impl<O: IsA<Object>> AtkObjectExt for O {
         {
             let f: &F = &*(f as *const F);
             f(
-                &Object::from_glib_borrow(this).unsafe_cast(),
+                &Object::from_glib_borrow(this).unsafe_cast_ref(),
                 &from_glib_borrow(arg1),
             )
         }
@@ -810,8 +810,8 @@ impl<O: IsA<Object>> AtkObjectExt for O {
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"active-descendant-changed\0".as_ptr() as *const _,
-                Some(transmute(
-                    active_descendant_changed_trampoline::<Self, F> as usize,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    active_descendant_changed_trampoline::<Self, F> as *const (),
                 )),
                 Box_::into_raw(f),
             )
@@ -832,7 +832,7 @@ impl<O: IsA<Object>> AtkObjectExt for O {
         {
             let f: &F = &*(f as *const F);
             f(
-                &Object::from_glib_borrow(this).unsafe_cast(),
+                &Object::from_glib_borrow(this).unsafe_cast_ref(),
                 arg1,
                 &from_glib_borrow(arg2),
             )
@@ -842,7 +842,9 @@ impl<O: IsA<Object>> AtkObjectExt for O {
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"children-changed\0".as_ptr() as *const _,
-                Some(transmute(children_changed_trampoline::<Self, F> as usize)),
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    children_changed_trampoline::<Self, F> as *const (),
+                )),
                 Box_::into_raw(f),
             )
         }
@@ -863,7 +865,7 @@ impl<O: IsA<Object>> AtkObjectExt for O {
         {
             let f: &F = &*(f as *const F);
             f(
-                &Object::from_glib_borrow(this).unsafe_cast(),
+                &Object::from_glib_borrow(this).unsafe_cast_ref(),
                 &GString::from_glib_borrow(arg1),
                 from_glib(arg2),
             )
@@ -873,7 +875,9 @@ impl<O: IsA<Object>> AtkObjectExt for O {
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"state-change\0".as_ptr() as *const _,
-                Some(transmute(state_change_trampoline::<Self, F> as usize)),
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    state_change_trampoline::<Self, F> as *const (),
+                )),
                 Box_::into_raw(f),
             )
         }
@@ -887,15 +891,15 @@ impl<O: IsA<Object>> AtkObjectExt for O {
             P: IsA<Object>,
         {
             let f: &F = &*(f as *const F);
-            f(&Object::from_glib_borrow(this).unsafe_cast())
+            f(&Object::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"visible-data-changed\0".as_ptr() as *const _,
-                Some(transmute(
-                    visible_data_changed_trampoline::<Self, F> as usize,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    visible_data_changed_trampoline::<Self, F> as *const (),
                 )),
                 Box_::into_raw(f),
             )
@@ -914,15 +918,15 @@ impl<O: IsA<Object>> AtkObjectExt for O {
             P: IsA<Object>,
         {
             let f: &F = &*(f as *const F);
-            f(&Object::from_glib_borrow(this).unsafe_cast())
+            f(&Object::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"notify::accessible-component-layer\0".as_ptr() as *const _,
-                Some(transmute(
-                    notify_accessible_component_layer_trampoline::<Self, F> as usize,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_accessible_component_layer_trampoline::<Self, F> as *const (),
                 )),
                 Box_::into_raw(f),
             )
@@ -944,15 +948,15 @@ impl<O: IsA<Object>> AtkObjectExt for O {
             P: IsA<Object>,
         {
             let f: &F = &*(f as *const F);
-            f(&Object::from_glib_borrow(this).unsafe_cast())
+            f(&Object::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"notify::accessible-component-mdi-zorder\0".as_ptr() as *const _,
-                Some(transmute(
-                    notify_accessible_component_mdi_zorder_trampoline::<Self, F> as usize,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_accessible_component_mdi_zorder_trampoline::<Self, F> as *const (),
                 )),
                 Box_::into_raw(f),
             )
@@ -971,15 +975,15 @@ impl<O: IsA<Object>> AtkObjectExt for O {
             P: IsA<Object>,
         {
             let f: &F = &*(f as *const F);
-            f(&Object::from_glib_borrow(this).unsafe_cast())
+            f(&Object::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"notify::accessible-description\0".as_ptr() as *const _,
-                Some(transmute(
-                    notify_accessible_description_trampoline::<Self, F> as usize,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_accessible_description_trampoline::<Self, F> as *const (),
                 )),
                 Box_::into_raw(f),
             )
@@ -998,15 +1002,15 @@ impl<O: IsA<Object>> AtkObjectExt for O {
             P: IsA<Object>,
         {
             let f: &F = &*(f as *const F);
-            f(&Object::from_glib_borrow(this).unsafe_cast())
+            f(&Object::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"notify::accessible-hypertext-nlinks\0".as_ptr() as *const _,
-                Some(transmute(
-                    notify_accessible_hypertext_nlinks_trampoline::<Self, F> as usize,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_accessible_hypertext_nlinks_trampoline::<Self, F> as *const (),
                 )),
                 Box_::into_raw(f),
             )
@@ -1025,15 +1029,15 @@ impl<O: IsA<Object>> AtkObjectExt for O {
             P: IsA<Object>,
         {
             let f: &F = &*(f as *const F);
-            f(&Object::from_glib_borrow(this).unsafe_cast())
+            f(&Object::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"notify::accessible-name\0".as_ptr() as *const _,
-                Some(transmute(
-                    notify_accessible_name_trampoline::<Self, F> as usize,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_accessible_name_trampoline::<Self, F> as *const (),
                 )),
                 Box_::into_raw(f),
             )
@@ -1052,15 +1056,15 @@ impl<O: IsA<Object>> AtkObjectExt for O {
             P: IsA<Object>,
         {
             let f: &F = &*(f as *const F);
-            f(&Object::from_glib_borrow(this).unsafe_cast())
+            f(&Object::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"notify::accessible-parent\0".as_ptr() as *const _,
-                Some(transmute(
-                    notify_accessible_parent_trampoline::<Self, F> as usize,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_accessible_parent_trampoline::<Self, F> as *const (),
                 )),
                 Box_::into_raw(f),
             )
@@ -1079,15 +1083,15 @@ impl<O: IsA<Object>> AtkObjectExt for O {
             P: IsA<Object>,
         {
             let f: &F = &*(f as *const F);
-            f(&Object::from_glib_borrow(this).unsafe_cast())
+            f(&Object::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"notify::accessible-role\0".as_ptr() as *const _,
-                Some(transmute(
-                    notify_accessible_role_trampoline::<Self, F> as usize,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_accessible_role_trampoline::<Self, F> as *const (),
                 )),
                 Box_::into_raw(f),
             )
@@ -1106,15 +1110,15 @@ impl<O: IsA<Object>> AtkObjectExt for O {
             P: IsA<Object>,
         {
             let f: &F = &*(f as *const F);
-            f(&Object::from_glib_borrow(this).unsafe_cast())
+            f(&Object::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"notify::accessible-table-caption\0".as_ptr() as *const _,
-                Some(transmute(
-                    notify_accessible_table_caption_trampoline::<Self, F> as usize,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_accessible_table_caption_trampoline::<Self, F> as *const (),
                 )),
                 Box_::into_raw(f),
             )
@@ -1136,15 +1140,15 @@ impl<O: IsA<Object>> AtkObjectExt for O {
             P: IsA<Object>,
         {
             let f: &F = &*(f as *const F);
-            f(&Object::from_glib_borrow(this).unsafe_cast())
+            f(&Object::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"notify::accessible-table-caption-object\0".as_ptr() as *const _,
-                Some(transmute(
-                    notify_accessible_table_caption_object_trampoline::<Self, F> as usize,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_accessible_table_caption_object_trampoline::<Self, F> as *const (),
                 )),
                 Box_::into_raw(f),
             )
@@ -1166,15 +1170,15 @@ impl<O: IsA<Object>> AtkObjectExt for O {
             P: IsA<Object>,
         {
             let f: &F = &*(f as *const F);
-            f(&Object::from_glib_borrow(this).unsafe_cast())
+            f(&Object::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"notify::accessible-table-column-description\0".as_ptr() as *const _,
-                Some(transmute(
-                    notify_accessible_table_column_description_trampoline::<Self, F> as usize,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_accessible_table_column_description_trampoline::<Self, F> as *const (),
                 )),
                 Box_::into_raw(f),
             )
@@ -1196,15 +1200,15 @@ impl<O: IsA<Object>> AtkObjectExt for O {
             P: IsA<Object>,
         {
             let f: &F = &*(f as *const F);
-            f(&Object::from_glib_borrow(this).unsafe_cast())
+            f(&Object::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"notify::accessible-table-column-header\0".as_ptr() as *const _,
-                Some(transmute(
-                    notify_accessible_table_column_header_trampoline::<Self, F> as usize,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_accessible_table_column_header_trampoline::<Self, F> as *const (),
                 )),
                 Box_::into_raw(f),
             )
@@ -1226,15 +1230,15 @@ impl<O: IsA<Object>> AtkObjectExt for O {
             P: IsA<Object>,
         {
             let f: &F = &*(f as *const F);
-            f(&Object::from_glib_borrow(this).unsafe_cast())
+            f(&Object::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"notify::accessible-table-row-description\0".as_ptr() as *const _,
-                Some(transmute(
-                    notify_accessible_table_row_description_trampoline::<Self, F> as usize,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_accessible_table_row_description_trampoline::<Self, F> as *const (),
                 )),
                 Box_::into_raw(f),
             )
@@ -1253,15 +1257,15 @@ impl<O: IsA<Object>> AtkObjectExt for O {
             P: IsA<Object>,
         {
             let f: &F = &*(f as *const F);
-            f(&Object::from_glib_borrow(this).unsafe_cast())
+            f(&Object::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"notify::accessible-table-row-header\0".as_ptr() as *const _,
-                Some(transmute(
-                    notify_accessible_table_row_header_trampoline::<Self, F> as usize,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_accessible_table_row_header_trampoline::<Self, F> as *const (),
                 )),
                 Box_::into_raw(f),
             )
@@ -1280,15 +1284,15 @@ impl<O: IsA<Object>> AtkObjectExt for O {
             P: IsA<Object>,
         {
             let f: &F = &*(f as *const F);
-            f(&Object::from_glib_borrow(this).unsafe_cast())
+            f(&Object::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"notify::accessible-table-summary\0".as_ptr() as *const _,
-                Some(transmute(
-                    notify_accessible_table_summary_trampoline::<Self, F> as usize,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_accessible_table_summary_trampoline::<Self, F> as *const (),
                 )),
                 Box_::into_raw(f),
             )
@@ -1307,15 +1311,15 @@ impl<O: IsA<Object>> AtkObjectExt for O {
             P: IsA<Object>,
         {
             let f: &F = &*(f as *const F);
-            f(&Object::from_glib_borrow(this).unsafe_cast())
+            f(&Object::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"notify::accessible-value\0".as_ptr() as *const _,
-                Some(transmute(
-                    notify_accessible_value_trampoline::<Self, F> as usize,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_accessible_value_trampoline::<Self, F> as *const (),
                 )),
                 Box_::into_raw(f),
             )

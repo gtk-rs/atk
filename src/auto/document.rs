@@ -101,14 +101,16 @@ impl<O: IsA<Document>> DocumentExt for O {
             P: IsA<Document>,
         {
             let f: &F = &*(f as *const F);
-            f(&Document::from_glib_borrow(this).unsafe_cast())
+            f(&Document::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"load-complete\0".as_ptr() as *const _,
-                Some(transmute(load_complete_trampoline::<Self, F> as usize)),
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    load_complete_trampoline::<Self, F> as *const (),
+                )),
                 Box_::into_raw(f),
             )
         }
@@ -122,14 +124,16 @@ impl<O: IsA<Document>> DocumentExt for O {
             P: IsA<Document>,
         {
             let f: &F = &*(f as *const F);
-            f(&Document::from_glib_borrow(this).unsafe_cast())
+            f(&Document::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"load-stopped\0".as_ptr() as *const _,
-                Some(transmute(load_stopped_trampoline::<Self, F> as usize)),
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    load_stopped_trampoline::<Self, F> as *const (),
+                )),
                 Box_::into_raw(f),
             )
         }
@@ -144,14 +148,19 @@ impl<O: IsA<Document>> DocumentExt for O {
             P: IsA<Document>,
         {
             let f: &F = &*(f as *const F);
-            f(&Document::from_glib_borrow(this).unsafe_cast(), page_number)
+            f(
+                &Document::from_glib_borrow(this).unsafe_cast_ref(),
+                page_number,
+            )
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"page-changed\0".as_ptr() as *const _,
-                Some(transmute(page_changed_trampoline::<Self, F> as usize)),
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    page_changed_trampoline::<Self, F> as *const (),
+                )),
                 Box_::into_raw(f),
             )
         }
@@ -165,14 +174,16 @@ impl<O: IsA<Document>> DocumentExt for O {
             P: IsA<Document>,
         {
             let f: &F = &*(f as *const F);
-            f(&Document::from_glib_borrow(this).unsafe_cast())
+            f(&Document::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"reload\0".as_ptr() as *const _,
-                Some(transmute(reload_trampoline::<Self, F> as usize)),
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    reload_trampoline::<Self, F> as *const (),
+                )),
                 Box_::into_raw(f),
             )
         }

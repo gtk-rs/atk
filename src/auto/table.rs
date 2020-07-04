@@ -321,14 +321,16 @@ impl<O: IsA<Table>> TableExt for O {
             P: IsA<Table>,
         {
             let f: &F = &*(f as *const F);
-            f(&Table::from_glib_borrow(this).unsafe_cast(), arg1, arg2)
+            f(&Table::from_glib_borrow(this).unsafe_cast_ref(), arg1, arg2)
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"column-deleted\0".as_ptr() as *const _,
-                Some(transmute(column_deleted_trampoline::<Self, F> as usize)),
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    column_deleted_trampoline::<Self, F> as *const (),
+                )),
                 Box_::into_raw(f),
             )
         }
@@ -344,14 +346,16 @@ impl<O: IsA<Table>> TableExt for O {
             P: IsA<Table>,
         {
             let f: &F = &*(f as *const F);
-            f(&Table::from_glib_borrow(this).unsafe_cast(), arg1, arg2)
+            f(&Table::from_glib_borrow(this).unsafe_cast_ref(), arg1, arg2)
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"column-inserted\0".as_ptr() as *const _,
-                Some(transmute(column_inserted_trampoline::<Self, F> as usize)),
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    column_inserted_trampoline::<Self, F> as *const (),
+                )),
                 Box_::into_raw(f),
             )
         }
@@ -365,14 +369,16 @@ impl<O: IsA<Table>> TableExt for O {
             P: IsA<Table>,
         {
             let f: &F = &*(f as *const F);
-            f(&Table::from_glib_borrow(this).unsafe_cast())
+            f(&Table::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"column-reordered\0".as_ptr() as *const _,
-                Some(transmute(column_reordered_trampoline::<Self, F> as usize)),
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    column_reordered_trampoline::<Self, F> as *const (),
+                )),
                 Box_::into_raw(f),
             )
         }
@@ -386,14 +392,16 @@ impl<O: IsA<Table>> TableExt for O {
             P: IsA<Table>,
         {
             let f: &F = &*(f as *const F);
-            f(&Table::from_glib_borrow(this).unsafe_cast())
+            f(&Table::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"model-changed\0".as_ptr() as *const _,
-                Some(transmute(model_changed_trampoline::<Self, F> as usize)),
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    model_changed_trampoline::<Self, F> as *const (),
+                )),
                 Box_::into_raw(f),
             )
         }
@@ -409,14 +417,16 @@ impl<O: IsA<Table>> TableExt for O {
             P: IsA<Table>,
         {
             let f: &F = &*(f as *const F);
-            f(&Table::from_glib_borrow(this).unsafe_cast(), arg1, arg2)
+            f(&Table::from_glib_borrow(this).unsafe_cast_ref(), arg1, arg2)
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"row-deleted\0".as_ptr() as *const _,
-                Some(transmute(row_deleted_trampoline::<Self, F> as usize)),
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    row_deleted_trampoline::<Self, F> as *const (),
+                )),
                 Box_::into_raw(f),
             )
         }
@@ -432,14 +442,16 @@ impl<O: IsA<Table>> TableExt for O {
             P: IsA<Table>,
         {
             let f: &F = &*(f as *const F);
-            f(&Table::from_glib_borrow(this).unsafe_cast(), arg1, arg2)
+            f(&Table::from_glib_borrow(this).unsafe_cast_ref(), arg1, arg2)
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"row-inserted\0".as_ptr() as *const _,
-                Some(transmute(row_inserted_trampoline::<Self, F> as usize)),
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    row_inserted_trampoline::<Self, F> as *const (),
+                )),
                 Box_::into_raw(f),
             )
         }
@@ -453,14 +465,16 @@ impl<O: IsA<Table>> TableExt for O {
             P: IsA<Table>,
         {
             let f: &F = &*(f as *const F);
-            f(&Table::from_glib_borrow(this).unsafe_cast())
+            f(&Table::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"row-reordered\0".as_ptr() as *const _,
-                Some(transmute(row_reordered_trampoline::<Self, F> as usize)),
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    row_reordered_trampoline::<Self, F> as *const (),
+                )),
                 Box_::into_raw(f),
             )
         }

@@ -53,14 +53,16 @@ impl<O: IsA<Window>> AtkWindowExt for O {
             P: IsA<Window>,
         {
             let f: &F = &*(f as *const F);
-            f(&Window::from_glib_borrow(this).unsafe_cast())
+            f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"activate\0".as_ptr() as *const _,
-                Some(transmute(activate_trampoline::<Self, F> as usize)),
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    activate_trampoline::<Self, F> as *const (),
+                )),
                 Box_::into_raw(f),
             )
         }
@@ -74,14 +76,16 @@ impl<O: IsA<Window>> AtkWindowExt for O {
             P: IsA<Window>,
         {
             let f: &F = &*(f as *const F);
-            f(&Window::from_glib_borrow(this).unsafe_cast())
+            f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"create\0".as_ptr() as *const _,
-                Some(transmute(create_trampoline::<Self, F> as usize)),
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    create_trampoline::<Self, F> as *const (),
+                )),
                 Box_::into_raw(f),
             )
         }
@@ -95,14 +99,16 @@ impl<O: IsA<Window>> AtkWindowExt for O {
             P: IsA<Window>,
         {
             let f: &F = &*(f as *const F);
-            f(&Window::from_glib_borrow(this).unsafe_cast())
+            f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"deactivate\0".as_ptr() as *const _,
-                Some(transmute(deactivate_trampoline::<Self, F> as usize)),
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    deactivate_trampoline::<Self, F> as *const (),
+                )),
                 Box_::into_raw(f),
             )
         }
@@ -116,14 +122,16 @@ impl<O: IsA<Window>> AtkWindowExt for O {
             P: IsA<Window>,
         {
             let f: &F = &*(f as *const F);
-            f(&Window::from_glib_borrow(this).unsafe_cast())
+            f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"destroy\0".as_ptr() as *const _,
-                Some(transmute(destroy_trampoline::<Self, F> as usize)),
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    destroy_trampoline::<Self, F> as *const (),
+                )),
                 Box_::into_raw(f),
             )
         }
@@ -137,14 +145,16 @@ impl<O: IsA<Window>> AtkWindowExt for O {
             P: IsA<Window>,
         {
             let f: &F = &*(f as *const F);
-            f(&Window::from_glib_borrow(this).unsafe_cast())
+            f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"maximize\0".as_ptr() as *const _,
-                Some(transmute(maximize_trampoline::<Self, F> as usize)),
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    maximize_trampoline::<Self, F> as *const (),
+                )),
                 Box_::into_raw(f),
             )
         }
@@ -158,14 +168,16 @@ impl<O: IsA<Window>> AtkWindowExt for O {
             P: IsA<Window>,
         {
             let f: &F = &*(f as *const F);
-            f(&Window::from_glib_borrow(this).unsafe_cast())
+            f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"minimize\0".as_ptr() as *const _,
-                Some(transmute(minimize_trampoline::<Self, F> as usize)),
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    minimize_trampoline::<Self, F> as *const (),
+                )),
                 Box_::into_raw(f),
             )
         }
@@ -179,14 +191,16 @@ impl<O: IsA<Window>> AtkWindowExt for O {
             P: IsA<Window>,
         {
             let f: &F = &*(f as *const F);
-            f(&Window::from_glib_borrow(this).unsafe_cast())
+            f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"move\0".as_ptr() as *const _,
-                Some(transmute(move_trampoline::<Self, F> as usize)),
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    move_trampoline::<Self, F> as *const (),
+                )),
                 Box_::into_raw(f),
             )
         }
@@ -200,14 +214,16 @@ impl<O: IsA<Window>> AtkWindowExt for O {
             P: IsA<Window>,
         {
             let f: &F = &*(f as *const F);
-            f(&Window::from_glib_borrow(this).unsafe_cast())
+            f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"resize\0".as_ptr() as *const _,
-                Some(transmute(resize_trampoline::<Self, F> as usize)),
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    resize_trampoline::<Self, F> as *const (),
+                )),
                 Box_::into_raw(f),
             )
         }
@@ -221,14 +237,16 @@ impl<O: IsA<Window>> AtkWindowExt for O {
             P: IsA<Window>,
         {
             let f: &F = &*(f as *const F);
-            f(&Window::from_glib_borrow(this).unsafe_cast())
+            f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"restore\0".as_ptr() as *const _,
-                Some(transmute(restore_trampoline::<Self, F> as usize)),
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    restore_trampoline::<Self, F> as *const (),
+                )),
                 Box_::into_raw(f),
             )
         }
