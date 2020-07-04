@@ -47,7 +47,7 @@ pub trait RelationExt: 'static {
 
     fn get_relation_type(&self) -> RelationType;
 
-    //fn get_target(&self) -> /*Unknown conversion*//*Unimplemented*/PtrArray TypeId { ns_id: 1, id: 9 };
+    fn get_target(&self) -> Vec<Object>;
 
     fn remove_target<P: IsA<Object>>(&self, target: &P) -> bool;
 
@@ -81,9 +81,13 @@ impl<O: IsA<Relation>> RelationExt for O {
         }
     }
 
-    //fn get_target(&self) -> /*Unknown conversion*//*Unimplemented*/PtrArray TypeId { ns_id: 1, id: 9 } {
-    //    unsafe { TODO: call atk_sys:atk_relation_get_target() }
-    //}
+    fn get_target(&self) -> Vec<Object> {
+        unsafe {
+            FromGlibPtrContainer::from_glib_none(atk_sys::atk_relation_get_target(
+                self.as_ref().to_glib_none().0,
+            ))
+        }
+    }
 
     fn remove_target<P: IsA<Object>>(&self, target: &P) -> bool {
         unsafe {
@@ -126,15 +130,15 @@ impl<O: IsA<Relation>> RelationExt for O {
             P: IsA<Relation>,
         {
             let f: &F = &*(f as *const F);
-            f(&Relation::from_glib_borrow(this).unsafe_cast())
+            f(&Relation::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"notify::relation-type\0".as_ptr() as *const _,
-                Some(transmute(
-                    notify_relation_type_trampoline::<Self, F> as usize,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_relation_type_trampoline::<Self, F> as *const (),
                 )),
                 Box_::into_raw(f),
             )
@@ -150,14 +154,16 @@ impl<O: IsA<Relation>> RelationExt for O {
             P: IsA<Relation>,
         {
             let f: &F = &*(f as *const F);
-            f(&Relation::from_glib_borrow(this).unsafe_cast())
+            f(&Relation::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"notify::target\0".as_ptr() as *const _,
-                Some(transmute(notify_target_trampoline::<Self, F> as usize)),
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_target_trampoline::<Self, F> as *const (),
+                )),
                 Box_::into_raw(f),
             )
         }

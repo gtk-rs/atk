@@ -355,15 +355,15 @@ impl<O: IsA<Text>> TextExt for O {
             P: IsA<Text>,
         {
             let f: &F = &*(f as *const F);
-            f(&Text::from_glib_borrow(this).unsafe_cast())
+            f(&Text::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"text-attributes-changed\0".as_ptr() as *const _,
-                Some(transmute(
-                    text_attributes_changed_trampoline::<Self, F> as usize,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    text_attributes_changed_trampoline::<Self, F> as *const (),
                 )),
                 Box_::into_raw(f),
             )
@@ -379,14 +379,16 @@ impl<O: IsA<Text>> TextExt for O {
             P: IsA<Text>,
         {
             let f: &F = &*(f as *const F);
-            f(&Text::from_glib_borrow(this).unsafe_cast(), arg1)
+            f(&Text::from_glib_borrow(this).unsafe_cast_ref(), arg1)
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"text-caret-moved\0".as_ptr() as *const _,
-                Some(transmute(text_caret_moved_trampoline::<Self, F> as usize)),
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    text_caret_moved_trampoline::<Self, F> as *const (),
+                )),
                 Box_::into_raw(f),
             )
         }
@@ -404,7 +406,7 @@ impl<O: IsA<Text>> TextExt for O {
         {
             let f: &F = &*(f as *const F);
             f(
-                &Text::from_glib_borrow(this).unsafe_cast(),
+                &Text::from_glib_borrow(this).unsafe_cast_ref(),
                 arg1,
                 arg2,
                 &GString::from_glib_borrow(arg3),
@@ -415,7 +417,9 @@ impl<O: IsA<Text>> TextExt for O {
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"text-insert\0".as_ptr() as *const _,
-                Some(transmute(text_insert_trampoline::<Self, F> as usize)),
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    text_insert_trampoline::<Self, F> as *const (),
+                )),
                 Box_::into_raw(f),
             )
         }
@@ -433,7 +437,7 @@ impl<O: IsA<Text>> TextExt for O {
         {
             let f: &F = &*(f as *const F);
             f(
-                &Text::from_glib_borrow(this).unsafe_cast(),
+                &Text::from_glib_borrow(this).unsafe_cast_ref(),
                 arg1,
                 arg2,
                 &GString::from_glib_borrow(arg3),
@@ -444,7 +448,9 @@ impl<O: IsA<Text>> TextExt for O {
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"text-remove\0".as_ptr() as *const _,
-                Some(transmute(text_remove_trampoline::<Self, F> as usize)),
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    text_remove_trampoline::<Self, F> as *const (),
+                )),
                 Box_::into_raw(f),
             )
         }
@@ -458,15 +464,15 @@ impl<O: IsA<Text>> TextExt for O {
             P: IsA<Text>,
         {
             let f: &F = &*(f as *const F);
-            f(&Text::from_glib_borrow(this).unsafe_cast())
+            f(&Text::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"text-selection-changed\0".as_ptr() as *const _,
-                Some(transmute(
-                    text_selection_changed_trampoline::<Self, F> as usize,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    text_selection_changed_trampoline::<Self, F> as *const (),
                 )),
                 Box_::into_raw(f),
             )

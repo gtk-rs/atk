@@ -128,14 +128,16 @@ impl<O: IsA<Hyperlink>> HyperlinkExt for O {
             P: IsA<Hyperlink>,
         {
             let f: &F = &*(f as *const F);
-            f(&Hyperlink::from_glib_borrow(this).unsafe_cast())
+            f(&Hyperlink::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"link-activated\0".as_ptr() as *const _,
-                Some(transmute(link_activated_trampoline::<Self, F> as usize)),
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    link_activated_trampoline::<Self, F> as *const (),
+                )),
                 Box_::into_raw(f),
             )
         }
@@ -150,14 +152,16 @@ impl<O: IsA<Hyperlink>> HyperlinkExt for O {
             P: IsA<Hyperlink>,
         {
             let f: &F = &*(f as *const F);
-            f(&Hyperlink::from_glib_borrow(this).unsafe_cast())
+            f(&Hyperlink::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"notify::end-index\0".as_ptr() as *const _,
-                Some(transmute(notify_end_index_trampoline::<Self, F> as usize)),
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_end_index_trampoline::<Self, F> as *const (),
+                )),
                 Box_::into_raw(f),
             )
         }
@@ -175,15 +179,15 @@ impl<O: IsA<Hyperlink>> HyperlinkExt for O {
             P: IsA<Hyperlink>,
         {
             let f: &F = &*(f as *const F);
-            f(&Hyperlink::from_glib_borrow(this).unsafe_cast())
+            f(&Hyperlink::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"notify::number-of-anchors\0".as_ptr() as *const _,
-                Some(transmute(
-                    notify_number_of_anchors_trampoline::<Self, F> as usize,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_number_of_anchors_trampoline::<Self, F> as *const (),
                 )),
                 Box_::into_raw(f),
             )
@@ -199,14 +203,16 @@ impl<O: IsA<Hyperlink>> HyperlinkExt for O {
             P: IsA<Hyperlink>,
         {
             let f: &F = &*(f as *const F);
-            f(&Hyperlink::from_glib_borrow(this).unsafe_cast())
+            f(&Hyperlink::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(
                 self.as_ptr() as *mut _,
                 b"notify::start-index\0".as_ptr() as *const _,
-                Some(transmute(notify_start_index_trampoline::<Self, F> as usize)),
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_start_index_trampoline::<Self, F> as *const (),
+                )),
                 Box_::into_raw(f),
             )
         }
